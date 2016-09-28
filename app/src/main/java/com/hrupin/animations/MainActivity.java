@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
                 }
                 if(recyclerView != null){
                     recyclerView.setVisibility(View.VISIBLE);
-                    adapter = new MainAdapter(getApplicationContext(), MockData.getDishList());
+                    adapter = new MainAdapter(MainActivity.this, MockData.getDishList());
                     adapter.setFirstOnly(false);
                     adapter.setDuration(400);
                     adapter.setInterpolator(new OvershootInterpolator(.5f));

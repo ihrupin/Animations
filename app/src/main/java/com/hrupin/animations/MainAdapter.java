@@ -2,7 +2,10 @@ package com.hrupin.animations;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,9 +25,9 @@ import java.util.List;
  * Created by Igor Khrupin www.hrupin.com on 9/28/16.
  */
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> implements View.OnClickListener {
 
-    private Context mContext;
+    private Activity mActivity;
     private List<DishListItem> mDataSet;
     private static final float DEFAULT_SCALE_FROM = .5f;
     private float mFrom = DEFAULT_SCALE_FROM;
@@ -33,23 +36,25 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     private int mLastPosition = -1;
     private boolean isFirstOnly = true;
 
-    public MainAdapter(Context context, List<DishListItem> dataSet) {
-        mContext = context;
+    public MainAdapter(Activity activity, List<DishListItem> dataSet) {
+        mActivity = activity;
         mDataSet = dataSet;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.layout_list_item, parent, false);
+        View v = LayoutInflater.from(mActivity).inflate(R.layout.layout_list_item, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final DishListItem item = mDataSet.get(position);
+        Glide.with(mActivity).load(item.getPreviewImageUrl()).into(holder.image);
+        holder.root.setTag(item);
         holder.name.setText(item.getName());
         holder.time.setText(item.getTime());
-        Glide.with(mContext).load(item.getPreviewImageUrl()).into(holder.image);
+        holder.root.setOnClickListener(this);
 
         int adapterPosition = holder.getAdapterPosition();
         if (!isFirstOnly || adapterPosition > mLastPosition) {
@@ -100,18 +105,30 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         isFirstOnly = firstOnly;
     }
 
+    @Override
+    public void onClick(View v) {
+        ImageView iv = (ImageView) (v.findViewById(R.id.image));
+        DishListItem item = (DishListItem) (v.getTag());
+        Intent intent = new Intent(mActivity, DetailsActivity.class);
+        intent.putExtra(DetailsActivity.EXTRA_ITEM, item);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, iv, "preview");
+        mActivity.startActivity(intent, options.toBundle());
+    }
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView image;
         public TextView time;
         public TextView name;
+        public ConstraintLayout root;
 
         public ViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
             time = (TextView) itemView.findViewById(R.id.time);
             name = (TextView) itemView.findViewById(R.id.name);
+            root = (ConstraintLayout) itemView.findViewById(R.id.item_root);
         }
     }
 
