@@ -16,19 +16,17 @@ import android.view.animation.OvershootInterpolator;
 import android.support.design.widget.TabLayout;
 import android.widget.Toast;
 
+import com.hrupin.animations.domain.MockData;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Created by Igor Khrupin www.hrupin.com on 9/28/16.
+ */
+
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
-    private static String[] data = new String[]{
-            "Apple", "Ball", "Camera", "Day", "Egg", "Foo", "Google", "Hello", "Iron", "Japan", "Coke",
-            "Dog", "Cat", "Yahoo", "Sony", "Canon", "Fujitsu", "USA", "Nexus", "LINE", "Haskell", "C++",
-            "Java", "Go", "Swift", "Objective-c", "Ruby", "PHP", "Bash", "ksh", "C", "Groovy", "Kotlin",
-            "Chip", "Japan", "U.S.A", "San Francisco", "Paris", "Tokyo", "Silicon Valley", "London",
-            "Spain", "China", "Taiwan", "Asia", "New York", "France", "Kyoto", "Android", "Google",
-            "iPhone", "iPad", "iPod", "Wasabeef"
-    };
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
     private RecyclerView recyclerView;
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         tabLayout.addTab(tabLayout.newTab().setText("IN TRANSIT"));
         tabLayout.setOnTabSelectedListener(this);
 
-        adapter = new MainAdapter(this, new ArrayList<>(Arrays.asList(data)));
+        adapter = new MainAdapter(this, MockData.getDishList());
         adapter.setFirstOnly(false);
         adapter.setDuration(400);
         adapter.setInterpolator(new OvershootInterpolator(.5f));
@@ -112,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        Toast.makeText(this, "tab selected = " + tab.getPosition(), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

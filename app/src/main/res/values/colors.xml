@@ -3,5 +3,8 @@
     <color name="tab_unselected_text_color">#aaffffff</color>
     <color name="tab_selected_text_color">#ffffff</color>
     <color name="app_bar_layout_bg">#17316c</color>
-    <color name="tab_indicator_color">#65a1f9</color>
+    <color name="tab_indicator_color">#0067ff</color>
+    <color name="list_item_name">#000000</color>
+    <color name="list_item_time">#505050</color>
+    <color name="main_screen_bg">#e2e8eb</color>
 </resources>

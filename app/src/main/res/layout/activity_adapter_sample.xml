@@ -26,7 +26,8 @@
             app:tabGravity="fill"
             app:tabTextColor="@color/tab_unselected_text_color"
             app:tabSelectedTextColor="@color/tab_selected_text_color"
-            app:tabIndicatorColor="@color/tab_indicator_color" />
+            app:tabIndicatorColor="@color/tab_indicator_color"
+            app:tabIndicatorHeight="3dp"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -34,6 +35,7 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:background="@color/main_screen_bg"/>
 
 </LinearLayout>

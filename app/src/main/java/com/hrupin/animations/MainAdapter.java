@@ -13,12 +13,19 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.hrupin.animations.domain.DishListItem;
+
 import java.util.List;
+
+/**
+ * Created by Igor Khrupin www.hrupin.com on 9/28/16.
+ */
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<String> mDataSet;
+    private List<DishListItem> mDataSet;
     private static final float DEFAULT_SCALE_FROM = .5f;
     private float mFrom = DEFAULT_SCALE_FROM;
     private int mDuration = 300;
@@ -26,7 +33,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     private int mLastPosition = -1;
     private boolean isFirstOnly = true;
 
-    public MainAdapter(Context context, List<String> dataSet) {
+    public MainAdapter(Context context, List<DishListItem> dataSet) {
         mContext = context;
         mDataSet = dataSet;
     }
@@ -39,7 +46,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.text.setText(mDataSet.get(position));
+        final DishListItem item = mDataSet.get(position);
+        holder.name.setText(item.getName());
+        holder.time.setText(item.getTime());
+        Glide.with(mContext).load(item.getPreviewImageUrl()).into(holder.image);
 
         int adapterPosition = holder.getAdapterPosition();
         if (!isFirstOnly || adapterPosition > mLastPosition) {
@@ -63,8 +73,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         notifyItemRemoved(position);
     }
 
-    public void add(String text, int position) {
-        mDataSet.add(position, text);
+    public void add(DishListItem item, int position) {
+        mDataSet.add(position, item);
         notifyItemInserted(position);
     }
 
@@ -94,12 +104,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView image;
-        public TextView text;
+        public TextView time;
+        public TextView name;
 
         public ViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
-            text = (TextView) itemView.findViewById(R.id.text);
+            time = (TextView) itemView.findViewById(R.id.time);
+            name = (TextView) itemView.findViewById(R.id.name);
         }
     }
 
