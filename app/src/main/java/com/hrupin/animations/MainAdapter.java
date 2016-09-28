@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.hrupin.animations.domain.DishListItem;
+import com.hrupin.animations.domain.DishItem;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import java.util.List;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> implements View.OnClickListener {
 
     private Activity mActivity;
-    private List<DishListItem> mDataSet;
+    private List<DishItem> mDataSet;
     private static final float DEFAULT_SCALE_FROM = .5f;
     private float mFrom = DEFAULT_SCALE_FROM;
     private int mDuration = 300;
@@ -36,7 +36,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
     private int mLastPosition = -1;
     private boolean isFirstOnly = true;
 
-    public MainAdapter(Activity activity, List<DishListItem> dataSet) {
+    public MainAdapter(Activity activity, List<DishItem> dataSet) {
         mActivity = activity;
         mDataSet = dataSet;
     }
@@ -49,8 +49,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final DishListItem item = mDataSet.get(position);
-        Glide.with(mActivity).load(item.getPreviewImageUrl()).into(holder.image);
+        final DishItem item = mDataSet.get(position);
+        Glide.with(mActivity).load(item.getImageUrl()).into(holder.image);
         holder.root.setTag(item);
         holder.name.setText(item.getName());
         holder.time.setText(item.getTime());
@@ -78,7 +78,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
         notifyItemRemoved(position);
     }
 
-    public void add(DishListItem item, int position) {
+    public void add(DishItem item, int position) {
         mDataSet.add(position, item);
         notifyItemInserted(position);
     }
@@ -108,9 +108,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
     @Override
     public void onClick(View v) {
         ImageView iv = (ImageView) (v.findViewById(R.id.image));
-        DishListItem item = (DishListItem) (v.getTag());
         Intent intent = new Intent(mActivity, DetailsActivity.class);
-        intent.putExtra(DetailsActivity.EXTRA_ITEM, item);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, iv, "preview");
         mActivity.startActivity(intent, options.toBundle());
     }

@@ -7,4 +7,6 @@
     <color name="list_item_name">#000000</color>
     <color name="list_item_time">#505050</color>
     <color name="main_screen_bg">#e2e8eb</color>
+    <color name="item_details_name">#ffffff</color>
+    <color name="item_details_time">#ffffff</color>
 </resources>

@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("");
 
         ivBicycle = (ImageView)findViewById(R.id.iv_bicycle);
 

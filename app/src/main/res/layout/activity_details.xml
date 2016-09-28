@@ -8,9 +8,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_preview"
+                android:transitionName="preview"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_tick"
+                android:layout_centerInParent="true"
+                android:id="@+id/iv_tick"/>
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:textColor="@color/item_details_name"
+                android:id="@+id/name"
+                android:layout_marginTop="150dp"
+                android:layout_below="@+id/tool_bar"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/item_details_time"
+                android:id="@+id/time"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/name"
+                android:layout_centerHorizontal="true" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/tool_bar"
@@ -19,14 +55,7 @@
                 android:background="@android:color/transparent"
                 app:layout_scrollFlags="scroll|enterAlways" />
 
-            <ImageView
-                android:id="@+id/iv_preview"
-                android:transitionName="preview"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:src="@mipmap/ic_launcher"/>
-
-        </FrameLayout>
+        </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
 

@@ -7,8 +7,9 @@ import android.os.Parcelable;
  * Created by Igor Khrupin www.hrupin.com on 9/28/16.
  */
 
-public class DishListItem implements Parcelable {
+public class DishItem implements Parcelable {
     private String previewImageUrl;
+    private String imageUrl;
     private String name;
     private String time;
 
@@ -18,6 +19,14 @@ public class DishListItem implements Parcelable {
 
     public void setPreviewImageUrl(String previewImageUrl) {
         this.previewImageUrl = previewImageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
