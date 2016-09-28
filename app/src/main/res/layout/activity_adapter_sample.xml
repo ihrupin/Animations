@@ -1,33 +1,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/smart_bg"
-        android:id="@+id/app_bar_layout"
         android:visibility="visible">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/tool_bar"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            android:layout_height="wrap_content">
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabMode="fixed"
-            app:tabGravity="fill"
-            app:tabTextColor="@color/tab_unselected_text_color"
-            app:tabSelectedTextColor="@color/tab_selected_text_color"
-            app:tabIndicatorColor="@color/tab_indicator_color"
-            app:tabIndicatorHeight="3dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/tool_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@android:color/transparent"
+                    app:layout_scrollFlags="scroll|enterAlways" />
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tool_bar"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="@color/tab_indicator_color"
+                    app:tabIndicatorHeight="3dp"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@color/tab_selected_text_color"
+                    app:tabTextColor="@color/tab_unselected_text_color" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/iv_bicycle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:srcCompat="@drawable/ic_bicycle_rotatable"
+                android:layout_marginBottom="-41dp" />
+
+        </FrameLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -35,7 +56,7 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:background="@color/main_screen_bg"/>
+        android:background="@color/main_screen_bg"
+        android:visibility="invisible" />
 
 </LinearLayout>
