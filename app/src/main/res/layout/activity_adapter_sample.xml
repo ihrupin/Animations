@@ -7,7 +7,9 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/smart_bg">
+        android:background="@drawable/smart_bg"
+        android:id="@+id/app_bar_layout"
+        android:visibility="visible">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/tool_bar"
@@ -31,6 +33,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
 
 </LinearLayout>
