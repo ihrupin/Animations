@@ -3,6 +3,7 @@ package com.hrupin.animations;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
  * Created by Igor Khrupin www.hrupin.com on 9/28/16.
  */
 
-public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
@@ -50,14 +51,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         tabIndicationViewForAnimation = findViewById(R.id.tab_indication_view_for_animation);
 
         appBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout);
-        appBarLayout.setVisibility(View.VISIBLE);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.addTab(tabLayout.newTab().setText("ALL"));
         tabLayout.addTab(tabLayout.newTab().setText("PICKING"));
         tabLayout.addTab(tabLayout.newTab().setText("DELIVERED"));
         tabLayout.addTab(tabLayout.newTab().setText("IN TRANSIT"));
-        tabLayout.setOnTabSelectedListener(this);
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, android.R.color.transparent));
         tabLayout.post(new Runnable() {
             @Override
@@ -68,34 +67,39 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         recyclerView = (RecyclerView) findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setVisibility(View.INVISIBLE);
     }
 
-    private void animateBicycle() {
-        if(ivBicycle != null && tabLayout != null && tabIndicationViewForAnimation != null) {
+    private void animateAppBarLayout() {
+        if(appBarLayout != null && ivBicycle != null && tabLayout != null && tabIndicationViewForAnimation != null) {
             int tabWidth = tabLayout.getWidth() / 4;
+            LinearInterpolator mLinearInterpolator = new LinearInterpolator();
+            ObjectAnimator animator = ObjectAnimator.ofFloat(appBarLayout, "translationY", -appBarLayout.getHeight(), 0);
+            animator.setInterpolator(mLinearInterpolator);
+            animator.setDuration(300);
 
             ObjectAnimator transitionIndicator = ObjectAnimator.ofFloat(tabIndicationViewForAnimation, "translationX", -tabWidth, 0);
-            transitionIndicator.setInterpolator(new LinearInterpolator());
+            transitionIndicator.setInterpolator(mLinearInterpolator);
             transitionIndicator.setDuration(300);
+            transitionIndicator.setStartDelay(300);
 
-            ObjectAnimator transitionBike = ObjectAnimator.ofFloat(ivBicycle, "translationX", 0, tabWidth);
-            transitionBike.setInterpolator(new LinearInterpolator());
-            transitionBike.setDuration(300);
+            ObjectAnimator bikeMove = ObjectAnimator.ofFloat(ivBicycle, "translationX", 0, tabWidth);
+            bikeMove.setInterpolator(mLinearInterpolator);
+            bikeMove.setDuration(300);
+            bikeMove.setStartDelay(300);
 
-            ObjectAnimator rotation1 = ObjectAnimator.ofFloat(ivBicycle, "rotation", 0, 25);
-            rotation1.setDuration(300);
-            rotation1.setStartDelay(100);
-            rotation1.setInterpolator(new LinearInterpolator());
+            ObjectAnimator bikeUp = ObjectAnimator.ofFloat(ivBicycle, "rotation", 0, 25);
+            bikeUp.setDuration(300);
+            bikeUp.setStartDelay(400);
+            bikeUp.setInterpolator(mLinearInterpolator);
 
-            ObjectAnimator rotation2 = ObjectAnimator.ofFloat(ivBicycle, "rotation", 25, 0);
-            rotation2.setDuration(400);
-            rotation2.setStartDelay(300);
-            rotation2.setInterpolator(new LinearInterpolator());
+            ObjectAnimator bikeDown = ObjectAnimator.ofFloat(ivBicycle, "rotation", 25, 0);
+            bikeDown.setDuration(400);
+            bikeDown.setStartDelay(600);
+            bikeDown.setInterpolator(mLinearInterpolator);
 
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(transitionBike, transitionIndicator, rotation1, rotation2);
-            animatorSet.addListener(new Animator.AnimatorListener() {
+            AnimatorSet set = new AnimatorSet();
+            set.playTogether(animator, transitionIndicator, bikeMove, bikeUp, bikeDown);
+            set.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
 
@@ -132,58 +136,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
                 }
             });
-            animatorSet.start();
+            set.start();
         }
-    }
-
-    private void animateAppBarLayout() {
-        if(appBarLayout != null) {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(appBarLayout, "translationY", -appBarLayout.getHeight(), 0);
-            animator.setInterpolator(new LinearInterpolator());
-            animator.setDuration(300);
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    if (appBarLayout != null) {
-                        appBarLayout.setVisibility(View.VISIBLE);
-                    }
-                    if (recyclerView != null) {
-                        recyclerView.setVisibility(View.INVISIBLE);
-                    }
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    animateBicycle();
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-
-            animator.start();
-        }
-    }
-
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-
     }
 }

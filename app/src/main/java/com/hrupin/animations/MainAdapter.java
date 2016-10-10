@@ -95,39 +95,22 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
         AnimatorSet set = new AnimatorSet();
         set.setInterpolator(mInterpolator);
         ObjectAnimator flipY = ObjectAnimator.ofFloat(holder.itemView, "rotationX", 180.0f, 0f);
-        flipY.setDuration(300);
+        flipY.setDuration(700);
 
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1f);
-        valueAnimator.setDuration(150);
-        valueAnimator.setInterpolator(mInterpolator);
-        valueAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        ObjectAnimator alpha1 = ObjectAnimator.ofFloat(holder.name, "alpha", 0f, 1f);
+        alpha1.setDuration(1);
+        alpha1.setStartDelay(350);
+        ObjectAnimator alpha2 = ObjectAnimator.ofFloat(holder.image, "alpha", 0f, 1);
+        alpha2.setDuration(1);
+        alpha2.setStartDelay(350);
+        ObjectAnimator alpha3 = ObjectAnimator.ofFloat(holder.time, "alpha", 0f, 1);
+        alpha3.setDuration(1);
+        alpha3.setStartDelay(350);
+        ObjectAnimator alpha4 = ObjectAnimator.ofFloat(holder.ivStatus, "alpha", 0f, 1);
+        alpha4.setDuration(1);
+        alpha4.setStartDelay(350);
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if(holder != null){
-                    holder.image.setVisibility(View.VISIBLE);
-                    holder.time.setVisibility(View.VISIBLE);
-                    holder.name.setVisibility(View.VISIBLE);
-                    holder.ivStatus.setVisibility(View.VISIBLE);
-                    clear(holder.itemView);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        set.playTogether(flipY, valueAnimator);
+        set.playTogether(flipY, alpha1, alpha2, alpha3, alpha4);
 
         return set;
     }
@@ -155,10 +138,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
         public ViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
+            image.setAlpha(0f);
             time = (TextView) itemView.findViewById(R.id.time);
+            time.setAlpha(0f);
             name = (TextView) itemView.findViewById(R.id.name);
+            name.setAlpha(0f);
             root = (ConstraintLayout) itemView.findViewById(R.id.item_root);
             ivStatus = (ImageView) itemView.findViewById(R.id.iv_in_transit);
+            ivStatus.setAlpha(0f);
         }
     }
 
