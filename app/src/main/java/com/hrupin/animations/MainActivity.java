@@ -68,93 +68,97 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     private void animateBicycle() {
-        ObjectAnimator transition = ObjectAnimator.ofFloat(ivBicycle, "translationX", 0, 350);
-        transition.setInterpolator(new LinearInterpolator());
-        transition.setDuration(300);
+        if(ivBicycle != null) {
+            ObjectAnimator transition = ObjectAnimator.ofFloat(ivBicycle, "translationX", 0, 350);
+            transition.setInterpolator(new LinearInterpolator());
+            transition.setDuration(300);
 
-        ObjectAnimator rotation1 = ObjectAnimator.ofFloat(ivBicycle, "rotation", 0, 25);
-        rotation1.setDuration(300);
-        rotation1.setStartDelay(100);
-        rotation1.setInterpolator(new LinearInterpolator());
+            ObjectAnimator rotation1 = ObjectAnimator.ofFloat(ivBicycle, "rotation", 0, 25);
+            rotation1.setDuration(300);
+            rotation1.setStartDelay(100);
+            rotation1.setInterpolator(new LinearInterpolator());
 
-        ObjectAnimator rotation2 = ObjectAnimator.ofFloat(ivBicycle, "rotation", 25, 0);
-        rotation2.setDuration(400);
-        rotation2.setStartDelay(300);
-        rotation2.setInterpolator(new LinearInterpolator());
+            ObjectAnimator rotation2 = ObjectAnimator.ofFloat(ivBicycle, "rotation", 25, 0);
+            rotation2.setDuration(400);
+            rotation2.setStartDelay(300);
+            rotation2.setInterpolator(new LinearInterpolator());
 
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(transition, rotation1, rotation2);
-        animatorSet.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                if(ivBicycle != null){
-                    ivBicycle.setVisibility(View.VISIBLE);
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(transition, rotation1, rotation2);
+            animatorSet.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    if (ivBicycle != null) {
+                        ivBicycle.setVisibility(View.VISIBLE);
+                    }
                 }
-            }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if(ivBicycle != null){
-                    ivBicycle.setVisibility(View.INVISIBLE);
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (ivBicycle != null) {
+                        ivBicycle.setVisibility(View.INVISIBLE);
+                    }
+                    if (appBarLayout != null) {
+                        appBarLayout.setVisibility(View.VISIBLE);
+                    }
+                    if (recyclerView != null) {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        adapter = new MainAdapter(MainActivity.this, MockData.getDishList());
+                        adapter.setFirstOnly(false);
+                        adapter.setDuration(400);
+                        adapter.setInterpolator(new OvershootInterpolator(.5f));
+                        recyclerView.setAdapter(adapter);
+                    }
                 }
-                if(appBarLayout != null){
-                    appBarLayout.setVisibility(View.VISIBLE);
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
                 }
-                if(recyclerView != null){
-                    recyclerView.setVisibility(View.VISIBLE);
-                    adapter = new MainAdapter(MainActivity.this, MockData.getDishList());
-                    adapter.setFirstOnly(false);
-                    adapter.setDuration(400);
-                    adapter.setInterpolator(new OvershootInterpolator(.5f));
-                    recyclerView.setAdapter(adapter);
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
                 }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        animatorSet.start();
+            });
+            animatorSet.start();
+        }
     }
 
     private void animateAppBarLayout() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(appBarLayout, "translationY", -appBarLayout.getHeight(), 0);
-        animator.setInterpolator(new LinearInterpolator());
-        animator.setDuration(300);
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                if(appBarLayout != null){
-                    appBarLayout.setVisibility(View.VISIBLE);
+        if(appBarLayout != null) {
+            ObjectAnimator animator = ObjectAnimator.ofFloat(appBarLayout, "translationY", -appBarLayout.getHeight(), 0);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.setDuration(300);
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    if (appBarLayout != null) {
+                        appBarLayout.setVisibility(View.VISIBLE);
+                    }
+                    if (recyclerView != null) {
+                        recyclerView.setVisibility(View.INVISIBLE);
+                    }
                 }
-                if(recyclerView != null){
-                    recyclerView.setVisibility(View.INVISIBLE);
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    animateBicycle();
                 }
-            }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                animateBicycle();
-            }
+                @Override
+                public void onAnimationCancel(Animator animation) {
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                }
 
-            }
+                @Override
+                public void onAnimationRepeat(Animator animation) {
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                }
+            });
 
-            }
-        });
-
-        animator.start();
+            animator.start();
+        }
     }
 
     @Override

@@ -13,6 +13,13 @@ public class DishItem implements Parcelable {
     private String name;
     private String time;
 
+    protected DishItem(Parcel in) {
+        previewImageUrl = in.readString();
+        imageUrl = in.readString();
+        name = in.readString();
+        time = in.readString();
+    }
+
     public String getPreviewImageUrl() {
         return previewImageUrl;
     }
@@ -52,6 +59,21 @@ public class DishItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(previewImageUrl);
+        dest.writeString(imageUrl);
+        dest.writeString(name);
+        dest.writeString(time);
     }
+
+    public static final Creator<DishItem> CREATOR = new Creator<DishItem>() {
+        @Override
+        public DishItem createFromParcel(Parcel in) {
+            return new DishItem(in);
+        }
+
+        @Override
+        public DishItem[] newArray(int size) {
+            return new DishItem[size];
+        }
+    };
 }
