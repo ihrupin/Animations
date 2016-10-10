@@ -3,12 +3,14 @@ package com.hrupin.animations;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -46,12 +48,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         appBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout);
         appBarLayout.setVisibility(View.VISIBLE);
-        appBarLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                animateAppBarLayout();
-            }
-        });
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.addTab(tabLayout.newTab().setText("ALL"));
@@ -59,6 +55,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         tabLayout.addTab(tabLayout.newTab().setText("DELIVERED"));
         tabLayout.addTab(tabLayout.newTab().setText("IN TRANSIT"));
         tabLayout.setOnTabSelectedListener(this);
+        tabLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                animateAppBarLayout();
+            }
+        });
 
         recyclerView = (RecyclerView) findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
