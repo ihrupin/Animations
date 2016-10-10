@@ -3,6 +3,7 @@ package com.hrupin.animations;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -17,7 +18,10 @@ import android.view.animation.OvershootInterpolator;
 import android.support.design.widget.TabLayout;
 import android.widget.ImageView;
 
+import com.hrupin.animations.domain.DishItem;
 import com.hrupin.animations.domain.MockData;
+
+import java.util.ArrayList;
 
 /**
  * Created by Igor Khrupin www.hrupin.com on 9/28/16.
@@ -114,9 +118,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
                     if (recyclerView != null) {
                         recyclerView.setVisibility(View.VISIBLE);
                         adapter = new MainAdapter(MainActivity.this, MockData.getDishList());
-                        adapter.setFirstOnly(false);
-                        adapter.setDuration(400);
-                        adapter.setInterpolator(new OvershootInterpolator(.5f));
                         recyclerView.setAdapter(adapter);
                     }
                 }

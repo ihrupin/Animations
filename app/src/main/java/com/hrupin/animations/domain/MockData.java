@@ -18,7 +18,7 @@ public class MockData {
         item.setTime("Sep 28, 2016. 10:00 - 11:00 AM");
         item.setImageUrl("https://unsplash.it/500/500?image=6");
 
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < 5; i++){
             dishList.add(item);
         }
     }

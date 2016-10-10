@@ -1,9 +1,15 @@
 package com.hrupin.animations;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.TimeAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
@@ -11,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -29,12 +36,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
 
     private Activity mActivity;
     private List<DishItem> mDataSet;
-    private static final float DEFAULT_SCALE_FROM = .5f;
+    private static final float DEFAULT_SCALE_FROM = 3f;
     private float mFrom = DEFAULT_SCALE_FROM;
-    private int mDuration = 300;
     private Interpolator mInterpolator = new LinearInterpolator();
     private int mLastPosition = -1;
     private boolean isFirstOnly = true;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public MainAdapter(Activity activity, List<DishItem> dataSet) {
         mActivity = activity;
@@ -48,24 +55,28 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final DishItem item = mDataSet.get(position);
-        Glide.with(mActivity).load(item.getImageUrl()).into(holder.image);
-        holder.root.setTag(item);
-        holder.name.setText(item.getName());
-        holder.time.setText(item.getTime());
-        holder.root.setOnClickListener(this);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mActivity != null && item != null && holder != null) {
+                    Glide.with(mActivity).load(item.getImageUrl()).into(holder.image);
+                    holder.root.setTag(item);
+                    holder.name.setText(item.getName());
+                    holder.time.setText(item.getTime());
+                    holder.root.setOnClickListener(MainAdapter.this);
 
-        int adapterPosition = holder.getAdapterPosition();
-        if (!isFirstOnly || adapterPosition > mLastPosition) {
-            for (Animator anim : getAnimators(holder.itemView)) {
-                anim.setDuration(mDuration).start();
-                anim.setInterpolator(mInterpolator);
+                    int adapterPosition = holder.getAdapterPosition();
+                    if (!isFirstOnly || adapterPosition > mLastPosition) {
+                        getAnimatorsScale(holder).start();
+                        mLastPosition = adapterPosition;
+                    } else {
+                        clear(holder.itemView);
+                    }
+                }
             }
-            mLastPosition = adapterPosition;
-        } else {
-            clear(holder.itemView);
-        }
+        }, position * 100);
     }
 
     @Override
@@ -83,10 +94,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
         notifyItemInserted(position);
     }
 
-    public void setDuration(int duration) {
-        mDuration = duration;
-    }
-
     public void setInterpolator(Interpolator interpolator) {
         mInterpolator = interpolator;
     }
@@ -95,12 +102,45 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
         mLastPosition = start;
     }
 
-    private Animator[] getAnimators(View view) {
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", mFrom, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", mFrom, 1f);
-        return new ObjectAnimator[]{scaleX, scaleY};
-    }
+    private AnimatorSet getAnimatorsScale(final ViewHolder holder) {
+        AnimatorSet set = new AnimatorSet();
+        set.setInterpolator(mInterpolator);
+        ObjectAnimator flipY = ObjectAnimator.ofFloat(holder.itemView, "rotationX", 180.0f, 0f);
+        flipY.setDuration(300);
 
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1f);
+        valueAnimator.setDuration(150);
+        valueAnimator.setInterpolator(mInterpolator);
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if(holder != null){
+                    holder.image.setVisibility(View.VISIBLE);
+                    holder.time.setVisibility(View.VISIBLE);
+                    holder.name.setVisibility(View.VISIBLE);
+                    holder.ivStatus.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        set.playTogether(flipY, valueAnimator);
+
+        return set;
+    }
     public void setFirstOnly(boolean firstOnly) {
         isFirstOnly = firstOnly;
     }
@@ -117,6 +157,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView image;
+        public ImageView ivStatus;
         public TextView time;
         public TextView name;
         public ConstraintLayout root;
@@ -127,6 +168,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
             time = (TextView) itemView.findViewById(R.id.time);
             name = (TextView) itemView.findViewById(R.id.name);
             root = (ConstraintLayout) itemView.findViewById(R.id.item_root);
+            ivStatus = (ImageView) itemView.findViewById(R.id.iv_in_transit);
         }
     }
 
