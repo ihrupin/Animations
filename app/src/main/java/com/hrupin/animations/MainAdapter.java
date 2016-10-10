@@ -36,12 +36,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
 
     private Activity mActivity;
     private List<DishItem> mDataSet;
-    private static final float DEFAULT_SCALE_FROM = 3f;
-    private float mFrom = DEFAULT_SCALE_FROM;
     private Interpolator mInterpolator = new LinearInterpolator();
     private int mLastPosition = -1;
     private boolean isFirstOnly = true;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public MainAdapter(Activity activity, List<DishItem> dataSet) {
         mActivity = activity;
@@ -57,26 +54,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final DishItem item = mDataSet.get(position);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mActivity != null && item != null && holder != null) {
-                    Glide.with(mActivity).load(item.getImageUrl()).into(holder.image);
-                    holder.root.setTag(item);
-                    holder.name.setText(item.getName());
-                    holder.time.setText(item.getTime());
-                    holder.root.setOnClickListener(MainAdapter.this);
+        Glide.with(mActivity).load(item.getImageUrl()).into(holder.image);
+        holder.root.setTag(item);
+        holder.name.setText(item.getName());
+        holder.time.setText(item.getTime());
+        holder.root.setOnClickListener(MainAdapter.this);
 
-                    int adapterPosition = holder.getAdapterPosition();
-                    if (!isFirstOnly || adapterPosition > mLastPosition) {
-                        getAnimatorsScale(holder).start();
-                        mLastPosition = adapterPosition;
-                    } else {
-                        clear(holder.itemView);
-                    }
-                }
-            }
-        }, position * 100);
+        getAnimatorsScale(holder).start();
     }
 
     @Override
@@ -87,6 +71,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
     public void remove(int position) {
         mDataSet.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void clear() {
+        mDataSet.clear();
+        notifyDataSetChanged();
     }
 
     public void add(DishItem item, int position) {
@@ -124,6 +113,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
                     holder.time.setVisibility(View.VISIBLE);
                     holder.name.setVisibility(View.VISIBLE);
                     holder.ivStatus.setVisibility(View.VISIBLE);
+                    clear(holder.itemView);
                 }
             }
 

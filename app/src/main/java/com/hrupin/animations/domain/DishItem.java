@@ -8,17 +8,18 @@ import android.os.Parcelable;
  */
 
 public class DishItem {
-    private String previewImageUrl;
     private String imageUrl;
     private String name;
     private String time;
 
-    public String getPreviewImageUrl() {
-        return previewImageUrl;
+    public DishItem(String name, String time, String imageUrl) {
+        this.imageUrl = imageUrl;
+        this.name = name;
+        this.time = time;
     }
 
-    public void setPreviewImageUrl(String previewImageUrl) {
-        this.previewImageUrl = previewImageUrl;
+    public DishItem() {
+
     }
 
     public String getImageUrl() {

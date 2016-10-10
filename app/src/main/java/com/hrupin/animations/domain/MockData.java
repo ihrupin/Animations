@@ -18,9 +18,11 @@ public class MockData {
         item.setTime("Sep 28, 2016. 10:00 - 11:00 AM");
         item.setImageUrl("https://unsplash.it/500/500?image=6");
 
-        for(int i = 0; i < 5; i++){
-            dishList.add(item);
-        }
+        dishList.add(new DishItem("Laptop 0", item.getTime(), item.getImageUrl()));
+        dishList.add(new DishItem("Laptop 1", item.getTime(), item.getImageUrl()));
+        dishList.add(new DishItem("Laptop 2", item.getTime(), item.getImageUrl()));
+        dishList.add(new DishItem("Laptop 3", item.getTime(), item.getImageUrl()));
+        dishList.add(new DishItem("Laptop 4", item.getTime(), item.getImageUrl()));
     }
 
     public static List<DishItem> getDishList() {
