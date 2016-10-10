@@ -3,18 +3,15 @@ package com.hrupin.animations;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.support.design.widget.TabLayout;
@@ -33,11 +30,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     private RecyclerView recyclerView;
     private MainAdapter adapter;
     private ImageView ivBicycle;
+    private View tabIndicationViewForAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_adapter_sample);
+        setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -45,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         getSupportActionBar().setTitle("");
 
         ivBicycle = (ImageView)findViewById(R.id.iv_bicycle);
+        tabIndicationViewForAnimation = findViewById(R.id.tab_indication_view_for_animation);
 
         appBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout);
         appBarLayout.setVisibility(View.VISIBLE);
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         tabLayout.addTab(tabLayout.newTab().setText("DELIVERED"));
         tabLayout.addTab(tabLayout.newTab().setText("IN TRANSIT"));
         tabLayout.setOnTabSelectedListener(this);
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, android.R.color.transparent));
         tabLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -68,10 +68,16 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     private void animateBicycle() {
-        if(ivBicycle != null) {
-            ObjectAnimator transition = ObjectAnimator.ofFloat(ivBicycle, "translationX", 0, 350);
-            transition.setInterpolator(new LinearInterpolator());
-            transition.setDuration(300);
+        if(ivBicycle != null && tabLayout != null && tabIndicationViewForAnimation != null) {
+            int tabWidth = tabLayout.getWidth() / 4;
+
+            ObjectAnimator transitionIndicator = ObjectAnimator.ofFloat(tabIndicationViewForAnimation, "translationX", -tabWidth, 0);
+            transitionIndicator.setInterpolator(new LinearInterpolator());
+            transitionIndicator.setDuration(300);
+
+            ObjectAnimator transitionBike = ObjectAnimator.ofFloat(ivBicycle, "translationX", 0, tabWidth);
+            transitionBike.setInterpolator(new LinearInterpolator());
+            transitionBike.setDuration(300);
 
             ObjectAnimator rotation1 = ObjectAnimator.ofFloat(ivBicycle, "rotation", 0, 25);
             rotation1.setDuration(300);
@@ -84,13 +90,11 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
             rotation2.setInterpolator(new LinearInterpolator());
 
             AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(transition, rotation1, rotation2);
+            animatorSet.playTogether(transitionBike, transitionIndicator, rotation1, rotation2);
             animatorSet.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    if (ivBicycle != null) {
-                        ivBicycle.setVisibility(View.VISIBLE);
-                    }
+
                 }
 
                 @Override
@@ -98,8 +102,14 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
                     if (ivBicycle != null) {
                         ivBicycle.setVisibility(View.INVISIBLE);
                     }
+                    if (tabIndicationViewForAnimation != null) {
+                        tabIndicationViewForAnimation.setVisibility(View.INVISIBLE);
+                    }
                     if (appBarLayout != null) {
                         appBarLayout.setVisibility(View.VISIBLE);
+                    }
+                    if(tabLayout != null){
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(tabLayout.getContext(), R.color.tab_indicator_color));
                     }
                     if (recyclerView != null) {
                         recyclerView.setVisibility(View.VISIBLE);
